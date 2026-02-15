@@ -1,0 +1,14 @@
+{
+  "name": "spencer-portfolio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.mjs",
+    "dev": "node server/index.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.19.2",
+    "jose": "^5.2.4"
+  }
+}

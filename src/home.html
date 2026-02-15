@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spencer Jones | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+    <script>
+        (() => {
+            document.documentElement.classList.add("js");
+            try {
+                const saved = localStorage.getItem("theme");
+                if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
+            } catch {
+                // ignore
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="homeStyle.css">
+</head>
+
+<body data-github-user="SpencerVJones" data-api-base="" class="modern-polish">
+
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header id="navbar" data-menu="closed">
+        <div class="nav-inner">
+            <div id="navbar-left">
+                <a class="brand" href="#intro" aria-label="Home">
+                    <span class="brand-text">SVJ</span>
+                </a>
+            </div>
+
+            <div class="nav-right">
+                <nav id="navbar-right" aria-label="Primary">
+                    <ul>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#projects">Projects</a></li>
+                        <li><a href="#experience">Experience</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+
+                <div class="nav-actions">
+                    <button id="nav-toggle" class="nav-toggle" type="button" aria-label="Open menu"
+                        aria-expanded="false" aria-controls="navbar-right" title="Open menu">
+                        <svg class="nav-toggle-icon nav-toggle-icon-menu" viewBox="0 0 24 24" aria-hidden="true"
+                            focusable="false">
+                            <path fill="currentColor" d="M4 6.5h16v2H4v-2Zm0 5h16v2H4v-2Zm0 5h16v2H4v-2Z" />
+                        </svg>
+                        <svg class="nav-toggle-icon nav-toggle-icon-close" viewBox="0 0 24 24" aria-hidden="true"
+                            focusable="false">
+                            <path fill="currentColor"
+                                d="m12 10.59 4.95-4.95 1.41 1.41L13.41 12l4.95 4.95-1.41 1.41L12 13.41l-4.95 4.95-1.41-1.41L10.59 12 5.64 7.05l1.41-1.41L12 10.59Z" />
+                        </svg>
+                    </button>
+
+                    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to light mode"
+                        title="Switch to light mode">
+                        <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true"
+                            focusable="false">
+                            <path fill="currentColor" d="M21 15.5A8.4 8.4 0 0 1 12.5 3 7.3 7.3 0 1 0 21 15.5Z" />
+                        </svg>
+                        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path fill="currentColor"
+                                d="M12 18.5a6.5 6.5 0 1 1 0-13 6.5 6.5 0 0 1 0 13Zm0-16.5a1 1 0 0 1 1 1v1.25a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1Zm0 18a1 1 0 0 1 1 1v1.25a1 1 0 1 1-2 0V21a1 1 0 0 1 1-1Zm9-9a1 1 0 0 1 1 1 1 1 0 0 1-1 1h-1.25a1 1 0 1 1 0-2H21ZM4.25 12a1 1 0 1 1 0 2H3a1 1 0 1 1 0-2h1.25Zm14.1-6.6a1 1 0 0 1 1.41 0 1 1 0 0 1 0 1.42l-.88.88a1 1 0 1 1-1.42-1.42l.89-.88Zm-12.7 12.7a1 1 0 0 1 1.41 0 1 1 0 0 1 0 1.42l-.88.88a1 1 0 0 1-1.42-1.42l.89-.88Zm0-12.7.88.88A1 1 0 1 1 5.12 7.7l-.88-.88A1 1 0 0 1 5.65 5.4Zm12.7 12.7.88.88a1 1 0 1 1-1.42 1.42l-.88-.89a1 1 0 1 1 1.42-1.41Z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="nav-backdrop" class="nav-backdrop" hidden></div>
+    </header>
+
+    <main id="main">
+        <section id="intro">
+            <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
+            <div id="right-container">
+                <h1 id="header-text">
+                    <span class="hero-line hero-line-name">I’m Spencer Jones,</span>
+                    <span class="hero-line hero-line-role">a Full-Stack Software Engineer building practical
+                        systems.</span>
+                </h1>
+                <p class="lead">
+                    <span>I build clean, scalable applications that solve real problems and hold up in production.
+                        From backend APIs to web and mobile products, I focus on reliability, performance, and
+                        maintainability.</span>
+                </p>
+                <div class="hero-social" aria-label="Social links">
+                    <a class="hero-social-btn social-github" data-label="GitHub" href="https://github.com/SpencerVJones"
+                        target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path fill="currentColor"
+                                d="M12 2C6.47 2 2 6.58 2 12.26c0 4.5 2.87 8.33 6.84 9.68.5.1.68-.22.68-.5 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.46-1.19-1.12-1.5-1.12-1.5-.92-.65.07-.64.07-.64 1.02.07 1.55 1.07 1.55 1.07.9 1.58 2.36 1.12 2.94.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.08 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.32.1-2.75 0 0 .84-.28 2.75 1.05A9.1 9.1 0 0 1 12 6.9c.83 0 1.67.11 2.45.33 1.9-1.33 2.74-1.05 2.74-1.05.56 1.43.21 2.49.1 2.75.64.72 1.03 1.64 1.03 2.76 0 3.95-2.34 4.82-4.57 5.07.36.32.68.95.68 1.92 0 1.38-.01 2.5-.01 2.84 0 .28.18.6.69.5 3.97-1.35 6.84-5.18 6.84-9.68C22 6.58 17.53 2 12 2Z" />
+                        </svg>
+                    </a>
+
+                    <a class="hero-social-btn social-linkedin" data-label="LinkedIn"
+                        href="https://www.linkedin.com/in/spencervjones/" target="_blank" rel="noopener noreferrer"
+                        aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path fill="currentColor"
+                                d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5ZM.5 8.05h4V23.5h-4V8.05ZM8.5 8.05h3.84v2.11h.05c.53-1 1.83-2.11 3.77-2.11 4.03 0 4.78 2.65 4.78 6.1V23.5h-4v-7.96c0-1.9-.03-4.34-2.65-4.34-2.65 0-3.06 2.07-3.06 4.2v8.1h-4V8.05Z" />
+                        </svg>
+                    </a>
+
+                    <a class="hero-social-btn social-email" data-label="Email" href="mailto:contact@spencervjones.dev"
+                        aria-label="Email">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path fill="currentColor"
+                                d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5L4 8V6l8 5 8-5v2Z" />
+                        </svg>
+                    </a>
+
+                    <a class="hero-social-btn social-stackoverflow" data-label="Stack Overflow"
+                        href="https://stackoverflow.com/users/28842474" target="_blank" rel="noopener noreferrer"
+                        aria-label="Stack Overflow">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path fill="currentColor"
+                                d="M7 20h10v-6h-2v4H9v-4H7v6Zm1-3.8h8v-1.8H8v1.8Zm0-3.6h8v-1.8H8v1.8ZM8 9h8V7.2H8V9Zm4-7 4 4h-3v5h-2V6H8l4-4Z" />
+                        </svg>
+                    </a>
+
+                    <a class="hero-social-btn social-instagram" data-label="Instagram"
+                        href="https://instagram.com/spenxer_j25" target="_blank" rel="noopener noreferrer"
+                        aria-label="Instagram">
+                        <svg class="hero-social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <rect x="5" y="5" width="14" height="14" rx="4" ry="4" fill="none" stroke="currentColor"
+                                stroke-width="1.8" />
+                            <circle cx="12" cy="12" r="3.4" fill="none" stroke="currentColor" stroke-width="1.8" />
+                            <circle cx="16.6" cy="7.4" r="1" fill="currentColor" />
+                        </svg>
+                    </a>
+
+                    <a class="hero-social-btn social-x" data-label="X" href="https://twitter.com/makes_spence"
+                        target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                d="M7 7l10 10M17 7L7 17" />
+                        </svg>
+                    </a>
+
+                    <a class="hero-social-btn social-youtube" data-label="YouTube"
+                        href="https://youtube.com/@MakesSpence" target="_blank" rel="noopener noreferrer"
+                        aria-label="YouTube">
+                        <svg class="hero-social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <rect x="4" y="7" width="16" height="10" rx="3" ry="3" fill="none" stroke="currentColor"
+                                stroke-width="1.8" />
+                            <path d="M11 10l4 2-4 2v-4Z" fill="currentColor" />
+                        </svg>
+                    </a>
+
+                    <a class="hero-social-btn social-hackerrank" data-label="HackerRank"
+                        href="https://hackerrank.com/jonesspencer99" target="_blank" rel="noopener noreferrer"
+                        aria-label="HackerRank">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"
+                                d="M12 3.2 19 7.3v9.4l-7 4.1-7-4.1V7.3L12 3.2Z" />
+                            <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                d="M9 8v8M15 8v8M9 12h6" />
+                        </svg>
+                    </a>
+
+                    <a class="hero-social-btn social-leetcode" data-label="LeetCode"
+                        href="https://leetcode.com/SpencerVJones" target="_blank" rel="noopener noreferrer"
+                        aria-label="LeetCode">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                d="M9 7l-5 5 5 5M15 7l5 5-5 5" />
+                            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                d="M10.5 12h3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-showcase reveal-on-scroll">
+                <div class="hero-portrait-wrap">
+                    <img class="hero-portrait hero-portrait-bw hero-portrait-bw-dark"
+                        src="../images/SJ23_B&W_Dark_aligned.png" alt="Spencer Jones portrait" width="1536" height="1024"
+                        loading="eager" decoding="async">
+                    <img class="hero-portrait hero-portrait-bw hero-portrait-bw-light"
+                        src="../images/SJ23_B&W_Light_aligned.png" alt="" aria-hidden="true" width="1536" height="1024"
+                        loading="eager" decoding="async">
+                    <img class="hero-portrait hero-portrait-color" src="../images/SJ23_Orig_aligned.png" alt=""
+                        aria-hidden="true" width="1536" height="1024" loading="eager" decoding="async">
+                </div>
+            </div>
+
+        </section>
+
+        <section id="about">
+            <div class="section-head">
+                <h2>About</h2>
+                <p class="muted">A quick look at what I do and the tools I build with.</p>
+            </div>
+
+            <div class="about-grid">
+                <div class="about-card about-profile">
+                    <img class="about-avatar" src="../images/SJ25_B&W_Dark.png" data-src-dark="../images/SJ25_B&W_Dark.png"
+                        data-src-light="../images/SJ25_B&W_Light.png" alt="Spencer V Jones" width="220" height="220"
+                        loading="lazy" decoding="async">
+                </div>
+
+                <article class="about-card about-bio">
+                    <h3 class="about-card-title">About</h3>
+                    <p class="about-text">
+                        I’m a developer driven by curiosity. I like understanding how things work — then building my own
+                        version of them better.
+                    </p>
+                    <p class="about-text">
+                        From full-stack web apps to machine learning models and algorithm challenges, I focus on
+                        strengthening both my technical
+                        foundation and real-world execution. Every project here reflects that process: learn deeply,
+                        build intentionally,
+                        improve constantly.
+                    </p>
+
+                    <a class="about-highlight" href="#experience">Currently completing my M.S. in Computer Science while
+                        building real-world software projects.</a>
+                </article>
+
+                <div id="tech-stack" class="about-card about-tech">
+                    <div class="about-tech-scroller" role="region" aria-label="Tech stack icons">
+                        <div class="about-tech-line" role="group" aria-label="Languages and frameworks" tabindex="0">
+                            <ul class="about-tech-row" role="list">
+                                <li class="about-tech-item" title="C#" data-fallback="C#">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=cs" alt="C#"
+                                        width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="Dart" data-fallback="Dart">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=dart" alt="Dart"
+                                        width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="Java" data-fallback="Java">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=java" alt="Java"
+                                        width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="JavaScript" data-fallback="JS">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=js"
+                                        alt="JavaScript" width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="Kotlin" data-fallback="Kt">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=kotlin"
+                                        alt="Kotlin" width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="Python" data-fallback="Py">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=python"
+                                        alt="Python" width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="Swift" data-fallback="Swift">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=swift" alt="Swift"
+                                        width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="HTML" data-fallback="HTML">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=html" alt="HTML"
+                                        width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="CSS" data-fallback="CSS">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=css" alt="CSS"
+                                        width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="Flask" data-fallback="Flask">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=flask" alt="Flask"
+                                        width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="React" data-fallback="React">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=react" alt="React"
+                                        width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="Express" data-fallback="Ex">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=express"
+                                        alt="Express" width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="Next.js" data-fallback="Next">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=nextjs"
+                                        alt="Next.js" width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="Node.js" data-fallback="Node">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=nodejs"
+                                        alt="Node.js" width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="jQuery" data-fallback="jQ">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=jquery"
+                                        alt="jQuery" width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="about-tech-line about-tech-line--reverse" role="group"
+                            aria-label="Cloud, databases, and tools" tabindex="0">
+                            <ul class="about-tech-row" role="list">
+                                <li class="about-tech-item" title="AWS" data-fallback="AWS">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=aws" alt="AWS"
+                                        width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="Azure" data-fallback="Azure">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=azure" alt="Azure"
+                                        width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="Google Cloud" data-fallback="GCP">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=gcp"
+                                        alt="Google Cloud" width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="Firebase" data-fallback="Firebase">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=firebase"
+                                        alt="Firebase" width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="Docker" data-fallback="Docker">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=docker"
+                                        alt="Docker" width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="Postman" data-fallback="Postman">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=postman"
+                                        alt="Postman" width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="DynamoDB" data-fallback="DDB">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=dynamodb"
+                                        alt="DynamoDB" width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="MongoDB" data-fallback="Mongo">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=mongodb"
+                                        alt="MongoDB" width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="MySQL" data-fallback="MySQL">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=mysql" alt="MySQL"
+                                        width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="PostgreSQL" data-fallback="Pg">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=postgres"
+                                        alt="PostgreSQL" width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="SQLite" data-fallback="SQLite">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=sqlite"
+                                        alt="SQLite" width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                                <li class="about-tech-item" title="Anaconda" data-fallback="Conda">
+                                    <img class="about-tech-logo" src="https://skillicons.dev/icons?i=anaconda"
+                                        alt="Anaconda" width="48" height="48" loading="lazy" decoding="async">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="github-activity" class="about-card about-github">
+                    <div class="about-card-top">
+                        <a class="about-icon-link" href="https://github.com/SpencerVJones" target="_blank"
+                            rel="noopener noreferrer" aria-label="Open GitHub profile">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path fill="currentColor"
+                                    d="M12 2C6.47 2 2 6.58 2 12.26c0 4.5 2.87 8.33 6.84 9.68.5.1.68-.22.68-.5 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.46-1.19-1.12-1.5-1.12-1.5-.92-.65.07-.64.07-.64 1.02.07 1.55 1.07 1.55 1.07.9 1.58 2.36 1.12 2.94.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.08 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.32.1-2.75 0 0 .84-.28 2.75 1.05A9.1 9.1 0 0 1 12 6.9c.83 0 1.67.11 2.45.33 1.9-1.33 2.74-1.05 2.74-1.05.56 1.43.21 2.49.1 2.75.64.72 1.03 1.64 1.03 2.76 0 3.95-2.34 4.82-4.57 5.07.36.32.68.95.68 1.92 0 1.38-.01 2.5-.01 2.84 0 .28.18.6.69.5 3.97-1.35 6.84-5.18 6.84-9.68C22 6.58 17.53 2 12 2Z" />
+                            </svg>
+                        </a>
+                    </div>
+
+                    <a class="gh-link" href="https://github.com/SpencerVJones" target="_blank" rel="noopener noreferrer"
+                        aria-label="Open GitHub profile">
+                        <div class="gh-heatmap" aria-hidden="true">
+                            <div id="gh-grid" class="gh-grid"></div>
+
+                            <div class="gh-legend">
+                                <span class="gh-legend-label">Less</span>
+                                <div class="gh-legend-swatches" aria-hidden="true">
+                                    <span class="gh-day"></span>
+                                    <span class="gh-day level-1"></span>
+                                    <span class="gh-day level-2"></span>
+                                    <span class="gh-day level-3"></span>
+                                    <span class="gh-day level-4"></span>
+                                </div>
+                                <span class="gh-legend-label">More</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div id="leetcode-activity" class="about-card about-leetcode">
+                    <div class="about-card-top">
+                        <a class="about-icon-link about-icon-link--leetcode" href="https://leetcode.com/SpencerVJones/"
+                            target="_blank" rel="noopener noreferrer" aria-label="Open LeetCode profile">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                    stroke-linejoin="round" d="M9 7 4 12l5 5M15 7l5 5-5 5M14 5l-4 14" />
+                            </svg>
+                        </a>
+                    </div>
+
+                    <a class="lc-card" href="https://leetcode.com/SpencerVJones/" target="_blank"
+                        rel="noopener noreferrer" aria-label="Open LeetCode profile">
+                        <div class="lc-card-top">
+                            <div class="lc-badge" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        d="M9 7l-5 5 5 5M15 7l5 5-5 5" />
+                                    <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        d="M10.5 12h3" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="lc-card-media" aria-hidden="true">
+                            <img id="leetcode-stats" class="lc-stats"
+                                src="https://leetcard.jacoblin.cool/SpencerVJones?theme=dark&font=Space%20Grotesk&ext=heatmap&border=0"
+                                data-src-dark="https://leetcard.jacoblin.cool/SpencerVJones?theme=dark&font=Space%20Grotesk&ext=heatmap&border=0"
+                                data-src-light="https://leetcard.jacoblin.cool/SpencerVJones?theme=light&font=Space%20Grotesk&ext=heatmap&border=0"
+                                alt="LeetCode stats for SpencerVJones" loading="lazy" decoding="async">
+                        </div>
+                    </a>
+
+                </div>
+
+                <div id="apple-music" class="about-card about-music">
+                    <div class="about-card-top">
+                        <a class="about-icon-link about-icon-link--apple" href="https://open.spotify.com/"
+                            target="_blank" rel="noopener noreferrer" aria-label="Open Spotify">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path fill="currentColor"
+                                    d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm4.8 14.55a.85.85 0 0 1-1.17.28 9.35 9.35 0 0 0-8.66-.84.86.86 0 0 1-.58-1.61 11.05 11.05 0 0 1 10.23.99.85.85 0 0 1 .18 1.18Zm1.68-2.89a1.05 1.05 0 0 1-1.44.34 11.77 11.77 0 0 0-10.75-1.07 1.05 1.05 0 1 1-.73-1.97 13.87 13.87 0 0 1 12.67 1.26 1.05 1.05 0 0 1 .25 1.44Zm.15-3.01A14.44 14.44 0 0 0 5.52 9.3a1.25 1.25 0 0 1-.85-2.35 16.94 16.94 0 0 1 15.4 1.5 1.25 1.25 0 1 1-1.44 2.1Z" />
+                            </svg>
+                        </a>
+                    </div>
+
+                    <div class="am-card" aria-label="Spotify recent track">
+                        <div class="am-row">
+                            <div id="am-art-wrap" class="am-art" aria-hidden="true">
+                                <img id="am-art" class="am-art-img" alt="" width="64" height="64" loading="lazy"
+                                    decoding="async" hidden>
+                                <span id="am-art-fallback" class="am-art-fallback">♪</span>
+                            </div>
+
+                            <div class="am-info">
+                                <p id="am-title" class="am-title">Loading...</p>
+                                <p id="am-artist" class="muted am-artist">Spotify</p>
+                                <p id="am-meta" class="muted am-meta">Fetching your most recent track.</p>
+                            </div>
+                        </div>
+
+                        <p id="am-status" class="muted am-meta" aria-live="polite">Connecting to Spotify...</p>
+
+                        <div class="am-actions">
+                            <a id="am-open" class="button primary am-open" href="https://open.spotify.com/"
+                                target="_blank" rel="noopener noreferrer" hidden>
+                                Open in Spotify
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <div class="section-head">
+                <h2>Projects</h2>
+                <p class="muted">Public repositories pulled from GitHub.</p>
+            </div>
+
+            <div class="projects-toolbar">
+                <div class="projects-tabs" role="toolbar" aria-label="Filter by language"></div>
+
+                <div class="projects-search-wrap">
+                    <label class="sr-only" for="projects-search">Search projects</label>
+                    <input id="projects-search" class="projects-search" type="search" placeholder="Search projects..."
+                        autocomplete="off">
+                </div>
+
+                <div class="projects-controls">
+                    <label class="projects-control" for="projects-sort">
+                        <span class="projects-control-label">Sort</span>
+                        <select id="projects-sort" class="projects-select">
+                            <option value="updated" selected>Recently updated</option>
+                            <option value="stars">Most stars</option>
+                            <option value="name">Name (A-Z)</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+
+            <p class="projects-count muted">Loading projects...</p>
+            <div class="projects-grid" aria-live="polite"></div>
+
+            <div class="projects-pagination">
+                <button class="button projects-page-btn prev" type="button" data-page="prev">Previous</button>
+                <p class="projects-page-meta muted">Page 1 of 1</p>
+                <button class="button projects-page-btn next" type="button" data-page="next">Next</button>
+            </div>
+        </section>
+
+        <section id="experience">
+            <div class="section-head">
+                <h2>Experience</h2>
+                <p class="muted">Work &amp; Education Highlights</p>
+            </div>
+
+            <div class="xp-columns">
+                <div class="xp-pane xp-pane-work">
+                    <h3 class="xp-heading">Work</h3>
+                    <div class="xp-list">
+                        <article class="xp-card xp-card-work">
+                            <div class="xp-content">
+                                <h4 class="xp-role">Applications Support Analyst</h4>
+                                <p class="xp-org">Kenco Group · Full-time</p>
+                                <p class="xp-meta">
+                                    <span>Apr 2024 - Present · 1 yr 11 mos</span>
+                                </p>
+                                <p class="xp-location">Remote</p>
+                                <ul class="xp-bullets">
+                                    <li>Contributed to the creation and implementation of Jira Service Management for
+                                        the
+                                        IT operations.</li>
+                                    <li>Traveled to London, Ontario (Drexel Sites) to support the deployment of over 50
+                                        PCs, acted as an on-site liaison for Kenco, and resolved IT requests during a
+                                        two-week engagement.</li>
+                                    <li>Utilized SQL to write and execute queries and update/delete scripts to resolve
+                                        complex issues within multiple WMS platforms.</li>
+                                    <li>Authored 50+ documentation guides on recurring ticket resolutions and created a
+                                        150+ slide SQL training deck to support team education and onboarding.</li>
+                                    <li>Trained new employees, providing hands-on support and documentation.</li>
+                                    <li>Resolved over 2,300 tickets and 650 service requests across platforms including
+                                        Blue Yonder, HighJump, Deposco, TMW, Unify, and PC Support systems.</li>
+                                    <li>Monitored server and network performance using LogicMonitor, proactively
+                                        identifying and mitigating performance issues before escalation.</li>
+                                    <li>Leveraged TeamViewer for remote desktop access and troubleshooting, enhancing
+                                        support responsiveness for distributed users.</li>
+                                </ul>
+                                <p class="xp-skills">Data Analysis, Systems Analysis and +5 skills</p>
+                            </div>
+                        </article>
+                    </div>
+                    <p class="xp-note">Full details on <a href="https://www.linkedin.com/in/spencervjones/"
+                            target="_blank" rel="noopener noreferrer">LinkedIn</a>.</p>
+                </div>
+
+                <div class="xp-pane xp-pane-edu">
+                    <h3 class="xp-heading">Education</h3>
+                    <div class="xp-list">
+                        <article class="xp-card xp-card-edu">
+                            <div class="xp-content">
+                                <h4 class="xp-role">Master of Science - MS, Computer Science</h4>
+                                <p class="xp-org">Full Sail University</p>
+                                <p class="xp-meta"><span>Jun 2025 — Jul 2026</span></p>
+                            </div>
+                        </article>
+
+                        <article class="xp-card xp-card-edu">
+                            <div class="xp-content">
+                                <h4 class="xp-role">Bachelor of Science - BS, Computer Science</h4>
+                                <p class="xp-org">Full Sail University</p>
+                                <p class="xp-meta"><span>Jan 2024 — May 2025</span></p>
+                                <p class="xp-skills">Skills: iOS Development, Python, +5 skills</p>
+                            </div>
+                        </article>
+
+                        <article class="xp-card xp-card-edu">
+                            <div class="xp-content">
+                                <h4 class="xp-role">Associate of Science - AS, Computer Science</h4>
+                                <p class="xp-org">Montgomery County Community College</p>
+                                <p class="xp-meta"><span>Aug 2020 — Dec 2023</span></p>
+                                <p class="xp-skills">Skills: Python, SQL, +3 skills</p>
+                            </div>
+                        </article>
+
+                        <article class="xp-card xp-card-edu">
+                            <div class="xp-content">
+                                <h4 class="xp-role">High School Diploma</h4>
+                                <p class="xp-org">Upper Moreland High School</p>
+                                <p class="xp-meta"><span>Aug 2014 — Jun 2018</span></p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <footer id="contact" class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-left">
+                <p class="eyebrow">Get in touch</p>
+                <h2 class="footer-title">Let's Build Something Amazing Together</h2>
+                <p class="footer-desc">
+                    I am open to software collaborations, freelance work, and technical opportunities.
+                    Send a note and I will reply as soon as possible.
+                </p>
+
+            </div>
+
+            <form class="footer-form" data-endpoint="https://formsubmit.co/ajax/SpencerVJones@Outlook.com" novalidate>
+                <input class="footer-honey" type="text" name="company" tabindex="-1" autocomplete="off"
+                    aria-hidden="true">
+                <input type="hidden" name="_subject" value="Portfolio Contact Form">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_template" value="table">
+
+                <div class="footer-form-head">
+                    <h3 class="footer-form-title">Send a message</h3>
+                    <p class="footer-form-sub">Your message sends directly from this form.</p>
+                </div>
+
+                <div class="footer-form-grid">
+                    <label class="footer-field">
+                        <span class="footer-label">Name</span>
+                        <input class="footer-input" type="text" name="name" placeholder="Your name" required>
+                    </label>
+
+                    <label class="footer-field">
+                        <span class="footer-label">Email</span>
+                        <input class="footer-input" type="email" name="email" placeholder="you@example.com" required>
+                    </label>
+
+                    <label class="footer-field footer-field--full">
+                        <span class="footer-label">Subject</span>
+                        <input class="footer-input" type="text" name="subject" placeholder="Project idea / question"
+                            required>
+                    </label>
+
+                    <label class="footer-field footer-field--full">
+                        <span class="footer-label">Message</span>
+                        <textarea class="footer-textarea" name="message"
+                            placeholder="Tell me a bit about what you're building..." required></textarea>
+                    </label>
+                </div>
+
+                <div class="footer-form-actions">
+                    <p class="footer-form-status" data-tone="info">Ready when you are.</p>
+                    <button class="button primary" type="submit">Send message</button>
+                </div>
+            </form>
+        </div>
+
+        <section id="impact-stats" class="impact-stats reveal-on-scroll" aria-label="Key highlights">
+            <div class="impact-stats-grid">
+                <article class="impact-stat reveal-on-scroll">
+                    <p class="impact-stat-number">3</p>
+                    <p class="impact-stat-label">Degrees Achieved</p>
+                </article>
+                <article class="impact-stat reveal-on-scroll">
+                    <p class="impact-stat-number">50+</p>
+                    <p class="impact-stat-label">Projects Shipped</p>
+                </article>
+                <article class="impact-stat reveal-on-scroll">
+                    <p class="impact-stat-number">25+</p>
+                    <p class="impact-stat-label">Technologies Applied</p>
+                </article>
+            </div>
+        </section>
+
+        <div class="footer-bottom">
+            <p class="footer-copy">© 2026 Spencer V Jones. Designed &amp; built with passion.</p>
+        </div>
+    </footer>
+
+    <script src="homeScript.js"></script>
+</body>
+
+</html>
