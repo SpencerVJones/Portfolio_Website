@@ -146,6 +146,7 @@ npm start       # start server/index.mjs
 
 ### Spotify Setup (Render + Local)
 Use a **refresh token** once, then the server auto-refreshes access tokens.
+The server also persists the most recent refresh token to `.spotify-refresh-token` (ignored by git) so restarts can recover from token rotation.
 
 Required env vars:
 - `SPOTIFY_CLIENT_ID`
@@ -163,6 +164,7 @@ One-time setup:
 Important:
 - `SPOTIFY_REFRESH_TOKEN` must be a **refresh token**, not a short-lived access token.
 - You should not need to update it every run unless Spotify revokes app access.
+- If Spotify rotates your refresh token, the server will keep using the latest one from `.spotify-refresh-token` when available.
 - If revoked, reconnect by opening `/api/spotify/login` again.
 
 ## Usage

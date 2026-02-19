@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: new URL("../.env", import.meta.url) });
 
 import express from "express";
+import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import { fileURLToPath } from "url";
@@ -114,7 +115,9 @@ let cachedSpotifyAccessToken = "";
 let cachedSpotifyAccessExp = 0;
 let spotifyRefreshTokenInvalid = false;
 const SPOTIFY_REFRESH_TOKEN_ENV = "SPOTIFY_REFRESH_TOKEN";
+const SPOTIFY_REFRESH_TOKEN_FILE = path.join(rootDir, ".spotify-refresh-token");
 let spotifyRefreshToken = String(process.env[SPOTIFY_REFRESH_TOKEN_ENV] || "").trim();
+let spotifyTokenRefreshPromise = null;
 
 const SPOTIFY_RECONNECT_MESSAGE =
   "Spotify refresh token is invalid or revoked. Reconnect at /api/spotify/login and set SPOTIFY_REFRESH_TOKEN in Render/.env (use the refresh token, not an access token).";
@@ -128,13 +131,51 @@ const logSpotifyErrorOnce = (key, ...args) => {
   console.error(...args);
 };
 
+const readSpotifyRefreshTokenFromFile = () => {
+  try {
+    return fs.readFileSync(SPOTIFY_REFRESH_TOKEN_FILE, "utf8").trim();
+  } catch {
+    return "";
+  }
+};
+
+const persistSpotifyRefreshTokenToFile = (token) => {
+  const nextToken = String(token || "").trim();
+  if (!nextToken) return;
+
+  const existingToken = readSpotifyRefreshTokenFromFile();
+  if (existingToken === nextToken) return;
+
+  try {
+    fs.writeFileSync(SPOTIFY_REFRESH_TOKEN_FILE, `${nextToken}\n`, {
+      encoding: "utf8",
+      mode: 0o600,
+    });
+  } catch (error) {
+    logSpotifyErrorOnce(
+      "spotify-token-file-write",
+      "Unable to persist Spotify refresh token to disk:",
+      error?.message || error
+    );
+  }
+};
+
 const getSpotifyRefreshToken = () => {
   if (spotifyRefreshToken) return spotifyRefreshToken;
   const envToken = String(process.env[SPOTIFY_REFRESH_TOKEN_ENV] || "").trim();
-  if (!envToken) {
+  if (envToken) {
+    spotifyRefreshToken = envToken;
+    persistSpotifyRefreshTokenToFile(envToken);
+    return spotifyRefreshToken;
+  }
+
+  const fileToken = readSpotifyRefreshTokenFromFile();
+  if (!fileToken) {
     throw new Error(`Missing required env var: ${SPOTIFY_REFRESH_TOKEN_ENV}`);
   }
-  spotifyRefreshToken = envToken;
+
+  spotifyRefreshToken = fileToken;
+  process.env[SPOTIFY_REFRESH_TOKEN_ENV] = fileToken;
   return spotifyRefreshToken;
 };
 
@@ -143,6 +184,32 @@ const setSpotifyRefreshToken = (token) => {
   if (!nextToken) return;
   spotifyRefreshToken = nextToken;
   process.env[SPOTIFY_REFRESH_TOKEN_ENV] = nextToken;
+  persistSpotifyRefreshTokenToFile(nextToken);
+};
+
+const requestSpotifyTokenRefresh = async (clientId, clientSecret, refreshToken) => {
+  const body = new URLSearchParams({
+    grant_type: "refresh_token",
+    refresh_token: refreshToken,
+  });
+
+  const tokenRes = await fetch("https://accounts.spotify.com/api/token", {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString("base64")}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body,
+  });
+
+  let tokenJson = {};
+  try {
+    tokenJson = await tokenRes.json();
+  } catch {
+    tokenJson = {};
+  }
+
+  return { tokenRes, tokenJson };
 };
 
 const getSpotifyAccessToken = async () => {
@@ -151,61 +218,76 @@ const getSpotifyAccessToken = async () => {
   if (spotifyRefreshTokenInvalid) {
     throw new Error(SPOTIFY_RECONNECT_MESSAGE);
   }
+  if (spotifyTokenRefreshPromise) {
+    return spotifyTokenRefreshPromise;
+  }
+
+  spotifyTokenRefreshPromise = (async () => {
+    try {
+      const clientId = requireEnv("SPOTIFY_CLIENT_ID");
+      const clientSecret = requireEnv("SPOTIFY_CLIENT_SECRET");
+      const refreshToken = getSpotifyRefreshToken();
+      const diskToken = readSpotifyRefreshTokenFromFile();
+      const refreshCandidates = [refreshToken];
+      if (diskToken && diskToken !== refreshToken) {
+        refreshCandidates.push(diskToken);
+      }
+
+      for (let index = 0; index < refreshCandidates.length; index++) {
+        const candidate = refreshCandidates[index];
+        const { tokenRes, tokenJson } = await requestSpotifyTokenRefresh(clientId, clientSecret, candidate);
+
+        if (!tokenRes.ok) {
+          if (tokenJson?.error === "invalid_grant" && index < refreshCandidates.length - 1) {
+            logSpotifyErrorOnce(
+              "spotify-token-invalid-grant-fallback",
+              "Spotify refresh token from env failed with invalid_grant. Retrying with last persisted token."
+            );
+            continue;
+          }
+
+          if (tokenJson?.error === "invalid_grant") {
+            spotifyRefreshTokenInvalid = true;
+            logSpotifyErrorOnce(
+              "spotify-token-invalid-grant",
+              "Spotify token error: invalid_grant. Ensure SPOTIFY_REFRESH_TOKEN is a refresh token (not an access token).",
+              tokenJson
+            );
+            throw new Error(SPOTIFY_RECONNECT_MESSAGE);
+          }
+          logSpotifyErrorOnce(
+            `spotify-token-${tokenRes.status}-${tokenJson?.error || "unknown"}`,
+            "Spotify token error:",
+            tokenJson
+          );
+          throw new Error(`Spotify token refresh failed: ${tokenRes.status} - ${tokenJson.error_description || tokenJson.error || "unknown error"}`);
+        }
+
+        if (!tokenJson?.access_token) {
+          throw new Error("Spotify token response was missing access_token.");
+        }
+
+        setSpotifyRefreshToken(tokenJson?.refresh_token || candidate);
+        cachedSpotifyAccessToken = tokenJson.access_token;
+        cachedSpotifyAccessExp = now + Number(tokenJson.expires_in || 3600);
+        spotifyRefreshTokenInvalid = false;
+
+        return cachedSpotifyAccessToken;
+      }
+
+      throw new Error("Spotify token refresh failed before a valid response could be handled.");
+    } catch (e) {
+      if (e?.message !== SPOTIFY_RECONNECT_MESSAGE) {
+        logSpotifyErrorOnce(`spotify-token-catch-${e?.message || "unknown"}`, "getSpotifyAccessToken error:", e?.message);
+      }
+      throw e;
+    }
+  })();
 
   try {
-    const clientId = requireEnv("SPOTIFY_CLIENT_ID");
-    const clientSecret = requireEnv("SPOTIFY_CLIENT_SECRET");
-    const refreshToken = getSpotifyRefreshToken();
-
-    const body = new URLSearchParams({
-      grant_type: "refresh_token",
-      refresh_token: refreshToken,
-    });
-
-    const tokenRes = await fetch("https://accounts.spotify.com/api/token", {
-      method: "POST",
-      headers: {
-        Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString("base64")}`,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body,
-    });
-
-    const tokenJson = await tokenRes.json();
-    
-    if (!tokenRes.ok) {
-      if (tokenJson?.error === "invalid_grant") {
-        spotifyRefreshTokenInvalid = true;
-        logSpotifyErrorOnce(
-          "spotify-token-invalid-grant",
-          "Spotify token error: invalid_grant. Ensure SPOTIFY_REFRESH_TOKEN is a refresh token (not an access token).",
-          tokenJson
-        );
-        throw new Error(SPOTIFY_RECONNECT_MESSAGE);
-      }
-      logSpotifyErrorOnce(
-        `spotify-token-${tokenRes.status}-${tokenJson?.error || "unknown"}`,
-        "Spotify token error:",
-        tokenJson
-      );
-      throw new Error(`Spotify token refresh failed: ${tokenRes.status} - ${tokenJson.error_description || tokenJson.error}`);
-    }
-
-    if (!tokenJson?.access_token) {
-      throw new Error("Spotify token response was missing access_token.");
-    }
-
-    setSpotifyRefreshToken(tokenJson?.refresh_token);
-    cachedSpotifyAccessToken = tokenJson.access_token;
-    cachedSpotifyAccessExp = now + Number(tokenJson.expires_in || 3600);
-    spotifyRefreshTokenInvalid = false;
-
-    return cachedSpotifyAccessToken;
-  } catch (e) {
-    if (e?.message !== SPOTIFY_RECONNECT_MESSAGE) {
-      logSpotifyErrorOnce(`spotify-token-catch-${e?.message || "unknown"}`, "getSpotifyAccessToken error:", e?.message);
-    }
-    throw e;
+    return await spotifyTokenRefreshPromise;
+  } finally {
+    spotifyTokenRefreshPromise = null;
   }
 };
 
