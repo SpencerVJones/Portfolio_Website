@@ -61,6 +61,7 @@
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [How to Run](#how-to-run)
+  - [Spotify Setup (Render + Local)](#spotify-setup-render--local)
 - [Usage](#usage)
 - [Roadmap](#roadmap)
 - [Contributors](#contributors)
@@ -142,6 +143,27 @@ npm install
 npm run dev     # start local server (same as npm start)
 npm start       # start server/index.mjs
 ```
+
+### Spotify Setup (Render + Local)
+Use a **refresh token** once, then the server auto-refreshes access tokens.
+
+Required env vars:
+- `SPOTIFY_CLIENT_ID`
+- `SPOTIFY_CLIENT_SECRET`
+- `SPOTIFY_REDIRECT_URI` (must exactly match your Spotify app settings)
+- `SPOTIFY_REFRESH_TOKEN`
+
+One-time setup:
+1. Set `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, and `SPOTIFY_REDIRECT_URI` in Render (or `.env` locally).
+2. Open your backend URL at `/api/spotify/login` (example: `https://portfolio-website-11uq.onrender.com/api/spotify/login`).
+3. Approve Spotify access.
+4. Copy the refresh token shown by `/api/spotify/callback`.
+5. Save that value to `SPOTIFY_REFRESH_TOKEN` in Render (or `.env` locally) and redeploy/restart once.
+
+Important:
+- `SPOTIFY_REFRESH_TOKEN` must be a **refresh token**, not a short-lived access token.
+- You should not need to update it every run unless Spotify revokes app access.
+- If revoked, reconnect by opening `/api/spotify/login` again.
 
 ## Usage
 -   Start the app locally and open the printed localhost URL.

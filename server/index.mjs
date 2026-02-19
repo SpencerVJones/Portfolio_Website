@@ -113,9 +113,11 @@ const challengeFromVerifier = (verifier) =>
 let cachedSpotifyAccessToken = "";
 let cachedSpotifyAccessExp = 0;
 let spotifyRefreshTokenInvalid = false;
+const SPOTIFY_REFRESH_TOKEN_ENV = "SPOTIFY_REFRESH_TOKEN";
+let spotifyRefreshToken = String(process.env[SPOTIFY_REFRESH_TOKEN_ENV] || "").trim();
 
 const SPOTIFY_RECONNECT_MESSAGE =
-  "Spotify refresh token is revoked. Reconnect at /api/spotify/login and update SPOTIFY_REFRESH_TOKEN in .env.";
+  "Spotify refresh token is invalid or revoked. Reconnect at /api/spotify/login and set SPOTIFY_REFRESH_TOKEN in Render/.env (use the refresh token, not an access token).";
 
 const spotifyErrorLogTimes = new Map();
 const logSpotifyErrorOnce = (key, ...args) => {
@@ -124,6 +126,23 @@ const logSpotifyErrorOnce = (key, ...args) => {
   if (now - last < 300000) return;
   spotifyErrorLogTimes.set(key, now);
   console.error(...args);
+};
+
+const getSpotifyRefreshToken = () => {
+  if (spotifyRefreshToken) return spotifyRefreshToken;
+  const envToken = String(process.env[SPOTIFY_REFRESH_TOKEN_ENV] || "").trim();
+  if (!envToken) {
+    throw new Error(`Missing required env var: ${SPOTIFY_REFRESH_TOKEN_ENV}`);
+  }
+  spotifyRefreshToken = envToken;
+  return spotifyRefreshToken;
+};
+
+const setSpotifyRefreshToken = (token) => {
+  const nextToken = String(token || "").trim();
+  if (!nextToken) return;
+  spotifyRefreshToken = nextToken;
+  process.env[SPOTIFY_REFRESH_TOKEN_ENV] = nextToken;
 };
 
 const getSpotifyAccessToken = async () => {
@@ -136,7 +155,7 @@ const getSpotifyAccessToken = async () => {
   try {
     const clientId = requireEnv("SPOTIFY_CLIENT_ID");
     const clientSecret = requireEnv("SPOTIFY_CLIENT_SECRET");
-    const refreshToken = requireEnv("SPOTIFY_REFRESH_TOKEN");
+    const refreshToken = getSpotifyRefreshToken();
 
     const body = new URLSearchParams({
       grant_type: "refresh_token",
@@ -157,7 +176,11 @@ const getSpotifyAccessToken = async () => {
     if (!tokenRes.ok) {
       if (tokenJson?.error === "invalid_grant") {
         spotifyRefreshTokenInvalid = true;
-        logSpotifyErrorOnce("spotify-token-invalid-grant", "Spotify token error:", tokenJson);
+        logSpotifyErrorOnce(
+          "spotify-token-invalid-grant",
+          "Spotify token error: invalid_grant. Ensure SPOTIFY_REFRESH_TOKEN is a refresh token (not an access token).",
+          tokenJson
+        );
         throw new Error(SPOTIFY_RECONNECT_MESSAGE);
       }
       logSpotifyErrorOnce(
@@ -168,6 +191,11 @@ const getSpotifyAccessToken = async () => {
       throw new Error(`Spotify token refresh failed: ${tokenRes.status} - ${tokenJson.error_description || tokenJson.error}`);
     }
 
+    if (!tokenJson?.access_token) {
+      throw new Error("Spotify token response was missing access_token.");
+    }
+
+    setSpotifyRefreshToken(tokenJson?.refresh_token);
     cachedSpotifyAccessToken = tokenJson.access_token;
     cachedSpotifyAccessExp = now + Number(tokenJson.expires_in || 3600);
     spotifyRefreshTokenInvalid = false;
@@ -241,14 +269,15 @@ app.get("/api/spotify/callback", async (req, res) => {
     // (Spotify may only return refresh_token on the first approval.)
     if (!json.refresh_token) {
       return res.status(200).send(
-        "No refresh token was returned. Remove this app from your Spotify connected apps, then open /api/spotify/login again."
+        "No refresh token was returned. Keep your existing SPOTIFY_REFRESH_TOKEN. If you do not have one yet, remove this app from Spotify connected apps, then open /api/spotify/login again."
       );
     }
+    setSpotifyRefreshToken(json.refresh_token);
     spotifyRefreshTokenInvalid = false;
     cachedSpotifyAccessToken = "";
     cachedSpotifyAccessExp = 0;
     res.send(
-      `Success. Copy this refresh token into .env as SPOTIFY_REFRESH_TOKEN:\n\n${json.refresh_token || "(no refresh token returned)"}`
+      `Success. Save this refresh token as SPOTIFY_REFRESH_TOKEN in Render/.env:\n\n${spotifyRefreshToken || "(no refresh token returned)"}\n\nDo not use an access token here.`
     );
   } catch (e) {
     console.error(e);
